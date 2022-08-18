@@ -1,4 +1,4 @@
-now=$(date "+%Y-%m-%d%H:%M")
+now=$(date "+%Y-%m-%d-%H:%M")
 
 git add ./
 git commit -m "代码提交$now"
