@@ -7,7 +7,11 @@ JMM本质上可以理解为，Java 内存模型规范了 JVM 如何提供按需�
 - volatile、synchronized 和 final 三个关键字
 - Happens-Before 规则
 
+**Java提供了volatile关键字来保证可见性**。
 
+当一个共享变量被volatile修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。
+
+**在Java里面，可以通过volatile关键字来保证一定的“有序性**
 
 ##  Java 内存模型的抽象
 
