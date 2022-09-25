@@ -509,5 +509,124 @@ https://mp.weixin.qq.com/s/VtIpj-uuxFj5Bf6TmTJMTw
 
 ##### hash的计算规则？
 
+##### hashmap的key可不可以为null，map呢？
 
 
+
+对于HashMap来说，可以存放null键和null值，而HashTable则不可以。
+
+在hashmap中
+
+```java
+    public static void main(String[] args) {
+        Map map = new HashMap();
+        map.put(null,1);
+        System.out.println(map.get(null));
+    }
+// 1
+```
+
+hashmapd的get方法
+
+```java
+    public V get(Object key) {
+        Node<K,V> e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
+```
+
+hash()方法
+
+```java
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+```
+
+这里直接判断了ket == null？ 等于的话直接为零，显然，这里相当于找了key = 0
+
+```java
+
+    public static void main(String[] args) {
+        Map map = new Hashtable();
+        map.put(null,1);
+        System.out.println(map.get(null));
+
+    }
+
+Exception in thread "main" java.lang.NullPointerException
+	at java.util.Hashtable.put(Hashtable.java:465)
+	at dailyExercise.test.thread.Rectangle.main(Rectangle.java:16)
+```
+
+Hashtable.put() 方法
+
+```java
+    public synchronized V put(K key, V value) {
+        // Make sure the value is not null
+      // 限制了 value 也不能为null ，如果value 为null，则npe
+        if (value == null) {
+            throw new NullPointerException();
+        }
+
+        // Makes sure the key is not already in the hashtable.
+        Entry<?,?> tab[] = table;
+      // key 不能为null 
+        int hash = key.hashCode();
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        @SuppressWarnings("unchecked")
+        Entry<K,V> entry = (Entry<K,V>)tab[index];
+        for(; entry != null ; entry = entry.next) {
+            if ((entry.hash == hash) && entry.key.equals(key)) {
+                V old = entry.value;
+                entry.value = value;
+                return old;
+            }
+        }
+
+        addEntry(hash, key, value, index);
+        return null;
+    }
+```
+
+
+
+![啊](https://raw.githubusercontent.com/erdengk/picGo/main/img/202209191858908.png)
+
+对于Map里面的键和值是否可以为空的问题，答案是：不一定。
+
+
+
+
+
+
+
+
+
+`map`的 `getOrDefault()`方法
+
+```java
+    default V getOrDefault(Object key, V defaultValue) {
+        V v;
+        return (((v = get(key)) ! = null) || containsKey(key))
+            ? v
+            : defaultValue;
+    }
+```
+
+根据当前的key是不是null 以及 key 是否存在来判断的返回值
+
+
+
+`hashmap`的 `getOrDefault()`方法
+
+```java
+    @Override
+    public V getOrDefault(Object key, V defaultValue) {
+        Node<K,V> e;
+        return (e = getNode(hash(key), key)) == null ? defaultValue : e.value;
+    }
+```
+
+根据当前node是不是null来判断的返回值
