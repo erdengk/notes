@@ -140,6 +140,14 @@ private static int partition(int[] array, int low, int high) {
 
 随机快排的效率将远远超过普通快排
 
+
+
+https://leetcode.cn/problems/sort-an-array/solution/si-lu-yi-dong-zhu-shi-xiang-xi-javasui-j-sk67/
+
+https://leetcode.cn/problems/sort-an-array/solution/bi-kan-shen-ru-xiang-jie-kuai-su-pai-xu-sfghx/
+
+https://leetcode.cn/problems/sort-an-array/solution/dong-hua-mo-ni-yi-ge-kuai-su-pai-xu-wo-x-7n7g/
+
 ## 手写堆排
 
 堆是具有下列性质的完全二叉树：每个结点的值都大于或等于其左右孩子结点的值，称为大顶堆；或者每个结点的值都小于或等于其左右孩子结点的值，称为小顶堆。
@@ -150,7 +158,9 @@ private static int partition(int[] array, int low, int high) {
 
 ```
 
+https://www.cnblogs.com/pypua/p/9974863.html
 
+https://leetcode.cn/problems/sort-an-array/solution/javacha-ru-dui-gui-bing-kuai-pai-dui-shu-dm56/
 
 ## 手写LRU
 
