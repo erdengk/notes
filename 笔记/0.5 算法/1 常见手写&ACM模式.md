@@ -176,57 +176,41 @@ LRU 的算法核心是哈希链表，本质就是 HashMap+DoubleLinkedList 时�
 
 
 
-### LinkedHashMap实现
+### Java API 实现
 
 ```java
-/**
- * @ClassName LRUCacheDemo
- * @Description TODO
- * @Author Oneby
- * @Date 2021/2/7 16:26
- * @Version 1.0
- */
-public class LRUCacheDemo<K, V> extends LinkedHashMap<K, V> {
+class LRUCache {
+    int capacity;
+    LinkedHashMap<Integer,Integer> cache;
 
-    // 缓存容量
-    private int capacity;
-
-    public LRUCacheDemo(int capacity) {
-        // accessOrder：the ordering mode. true for access-order；false for insertion-order
-        super(capacity, 0.75F, true);
+    public LRUCache(int capacity) {
         this.capacity = capacity;
+        cache = new LinkedHashMap<Integer,Integer>(capacity,0.75f,true){
+           @Override
+           public boolean removeEldestEntry(Map.Entry eldest){
+               return cache.size() > capacity;
+           } 
+        };
     }
-
-    // 用于判断是否需要删除最近最久未使用的节点
-    @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return super.size() > capacity;
+    
+    public int get(int key) {
+        return cache.getOrDefault(key,-1);
     }
-
-    public static void main(String[] args) {
-        LRUCacheDemo lruCacheDemo = new LRUCacheDemo(3);
-
-        lruCacheDemo.put(1, "a");
-        lruCacheDemo.put(2, "b");
-        lruCacheDemo.put(3, "c");
-        System.out.println(lruCacheDemo.keySet());
-
-        lruCacheDemo.put(4, "d");
-        System.out.println(lruCacheDemo.keySet());
-
-        lruCacheDemo.put(3, "c");
-        System.out.println(lruCacheDemo.keySet());
-        lruCacheDemo.put(3, "c");
-        System.out.println(lruCacheDemo.keySet());
-        lruCacheDemo.put(3, "c");
-        System.out.println(lruCacheDemo.keySet());
-        lruCacheDemo.put(5, "x");
-        System.out.println(lruCacheDemo.keySet());
+    
+    public void put(int key, int value) {
+        cache.put(key,value);
     }
-
 }
 
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
 ```
+
+
 
 
 
@@ -243,6 +227,55 @@ accessOrder = true 和 accessOrder = false 的情况
 ![image-20210207194714608](https://img-blog.csdnimg.cn/img_convert/b2d5a55df4837226e085710d78a0d8f6.png)
 
 https://blog.csdn.net/oneby1314/article/details/113789412
+
+### 使用LinkedHashmap实现
+
+```java
+class LRUCache {
+    int capacity ;
+    LinkedHashMap<Integer, Integer> cache = new LinkedHashMap<>();
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+    }
+    
+    public int get(int key) {
+        if(!cache.containsKey(key)){
+            return -1;
+        }
+        makeRecentKey(key);
+        return cache.get(key);
+    }
+    
+    public void put(int key, int value) {
+        if(cache.containsKey(key)){
+            cache.put(key,value);
+            makeRecentKey(key);
+            return;
+        }
+        if(cache.size()>=this.capacity){
+            // 链表头部就是最久未使用的 key
+            int oldestKey = cache.keySet().iterator().next();
+            cache.remove(oldestKey);
+        }
+        cache.put(key,value);
+    }
+    // 将当前key放到链表尾部
+    private void makeRecentKey(int key){
+        int val = cache.get(key);
+        cache.remove(key);
+        cache.put(key,val);
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
+
+
 
 ### 手动实现LRU
 
